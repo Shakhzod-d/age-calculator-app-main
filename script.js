@@ -74,20 +74,32 @@ input_year.addEventListener("input", (e) => {
 });
 
 function CalculateDate() {
-  if (isValid) {
-    let birthday = `${input_month.value}/${input_day.value}/${input_year.value}`;
-    console.log(birthday);
-    let birthdayObj = new Date(birthday);
-    let ageDiffMill = Date.now() - birthdayObj;
-    let ageDate = new Date(ageDiffMill);
-    let ageYears = ageDate.getUTCFullYear() - 1970;
-    let ageMonth = ageDate.getUTCMonth();
-    let ageDay = ageDate.getUTCDay();
-    // DISPLAYING EVERYTHING
-    output_day.textContent = ageDay;
-    output_month.textContent = ageMonth;
-    output_year.textContent = ageYears;
-  } else {
+  if (!isValid) {
     alert("error");
+    return;
   }
+
+  const birthDate = new Date(
+    `${input_year.value}-${input_month.value}-${input_day.value}`
+  );
+  const today = new Date();
+
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) {
+    months--;
+    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+    days += prevMonth.getDate();
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  output_year.textContent = years;
+  output_month.textContent = months;
+  output_day.textContent = days;
 }
